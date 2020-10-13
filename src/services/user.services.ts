@@ -1,5 +1,5 @@
 import { mapRecordToUser, User } from '../models/users.model'
-import { Service } from './airtable'
+import Service from './airtable'
 
 export default class UserService extends Service {
   constructor () {

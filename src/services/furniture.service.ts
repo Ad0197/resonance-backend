@@ -1,5 +1,5 @@
 import { Furniture, mapFromFildsToFurniture } from '../models/furniture.model'
-import { Service } from './airtable'
+import Service from './airtable'
 
 export class FurnitureService extends Service {
   constructor () {

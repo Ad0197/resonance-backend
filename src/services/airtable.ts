@@ -8,7 +8,7 @@ import Table from 'airtable/lib/table'
  * This class connect Airtable with the App using AirtableJs.
  */
 
-export abstract class Service {
+export default abstract class Service {
     private _connection: Table
 
     constructor (private tableName: string) {
