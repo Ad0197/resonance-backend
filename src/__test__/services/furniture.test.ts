@@ -1,4 +1,5 @@
 import Furniture from '../../models/furniture.model'
+import 'reflect-metadata'
 import FurnitureService from '../../services/furniture.service'
 import { getConnection } from '../../services/service'
 import dotenv from 'dotenv'

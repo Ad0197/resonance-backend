@@ -4,6 +4,7 @@ import express, { Application } from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
 import HelloResolver from './resolvers/hello.resolver'
+import FurnitureResolver from './resolvers/furniture.resolver'
 dotenv.config();
 
 (
@@ -11,7 +12,7 @@ dotenv.config();
     const app: Application = express()
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [HelloResolver]
+        resolvers: [HelloResolver, FurnitureResolver]
       }),
       context: ({ req, res }) => ({ req, res })
     })

@@ -1,28 +1,70 @@
-import Airtable from 'airtable'
+import { Field, ObjectType } from 'type-graphql'
+import Attachment from './attachmebt.model'
 import { Model } from './model'
+import { Vendor } from './vendor.model'
 
+@ObjectType()
 export default class Furniture implements Model {
   static tableName: String = 'Furniture';
-  id: string;
-  designer?: string[];
-  unitsInStore: number;
-  materialsAndFinishes: string[];
+  @Field(type => String)
+  id: String;
+
+  @Field(type => [String], { nullable: true })
+  designer?: String[];
+
+  @Field()
+  unitsInStore: Number;
+
+  @Field(type => [String])
+  materialsAndFinishes: String[];
+
+  @Field()
   size: string;
+
+  @Field()
   unitCost: number;
+
+  @Field(type => [String])
   settings: string[];
-  vendor: any[];
+
+  @Field(type => [Vendor])
+  vendor: Vendor[];
+
+  @Field({ nullable: true })
   notes?: string;
+
+  @Field()
   link: string;
+
+  @Field()
   name: string;
+
+  @Field()
   type: string;
-  picture: Airtable.Attachment[];
+
+  @Field(type => [Attachment])
+  picture: Attachment[];
+
+  @Field()
   description: string;
+
+  @Field()
   totalUnitsSold: number;
+
+  @Field()
   grossSales: number;
+
+  @Field()
   recordID: string;
+
+  @Field({ nullable: true })
   inStock?: boolean;
+
+  @Field(type => [String], { nullable: true })
   orders?: string[];
-  schematic?: Airtable.Attachment[];
+
+  @Field(type => [Attachment], { nullable: true })
+  schematic?: Attachment[];
 
   static mapFromFieldToInstance = (record: any): Furniture => {
     return {
