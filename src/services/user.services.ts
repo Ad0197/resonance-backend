@@ -1,4 +1,4 @@
-import { mapJsonToObject, User } from '../models/users.model'
+import { mapRecordToUser, User } from '../models/users.model'
 import { Service } from './airtable'
 
 export default class UserService extends Service {
@@ -6,9 +6,9 @@ export default class UserService extends Service {
     super('Users')
   }
 
-    getAllUser = async (): Promise<(User | undefined)[]> => {
-      return (await this.getAllRecord()).map((record: any) => {
-        return mapJsonToObject(record)
-      })
-    }
+  getAllUser = async (): Promise<(User)[]> => {
+    return (await this.getAllRecord()).map((record: any) => {
+      return mapRecordToUser(record)
+    })
+  }
 }
