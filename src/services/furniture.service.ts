@@ -1,10 +1,8 @@
-import { Furniture, mapFromFildsToFurniture } from '../models/furniture.model'
-import Service from './airtable'
+import Furniture from '../models/furniture.model'
+import Service from './service'
 
-export class FurnitureService extends Service {
-  constructor () {
-    super('Furniture')
+export default class FurnitureService extends Service<Furniture> {
+  constructor (connection: Function) {
+    super(connection, Furniture)
   }
-
-    getAllFurniture = async (): Promise<Furniture[]> => (await this.getAllRecord()).map((record: any) => mapFromFildsToFurniture(record))
 }
