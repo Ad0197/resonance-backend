@@ -1,19 +1,25 @@
 import dotenv from 'dotenv'
-import express, { Application, Response, Request, NextFunction } from 'express'
-import { FurnitureService } from './services/furniture.service'
-dotenv.config()
+import 'reflect-metadata'
+import express, { Application } from 'express'
+import { ApolloServer } from 'apollo-server-express'
+import { buildSchema } from 'type-graphql'
+import HelloResolver from './resolvers/hello.resolver'
+dotenv.config();
 
-const app: Application = express()
+(
+  async () => {
+    const app: Application = express()
+    const apolloServer = new ApolloServer({
+      schema: await buildSchema({
+        resolvers: [HelloResolver]
+      }),
+      context: ({ req, res }) => ({ req, res })
+    })
 
-const add: Function = (a: number, b: number): number => a + b
+    apolloServer.applyMiddleware({ app, cors: true })
 
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  console.log(add(5, 5))
-  res.send('hola')
-})
-
-app.listen(5000, async () => {
-  console.log('Server is listining in port 5000')
-  const service = new FurnitureService()
-  console.log(await service.getAllFurniture())
-})
+    app.listen(process.env.PORT || 5000, async () => {
+      console.log('Server is listining in port 5000')
+    })
+  }
+)()
