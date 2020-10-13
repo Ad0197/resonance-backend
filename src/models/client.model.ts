@@ -1,6 +1,6 @@
 import Airtable from 'airtable'
 
-export interface Client {
+export class Client {
     billingAddress?: string;
     users?: string;
     name: string;

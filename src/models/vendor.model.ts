@@ -1,6 +1,6 @@
 import Airtable from 'airtable'
 
-export interface Vendor {
+export class Vendor {
     furniture: string[];
     catalogLink: string;
     shippingDetails?: Airtable.Attachment;
