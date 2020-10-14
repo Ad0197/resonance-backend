@@ -10,7 +10,7 @@ import { ModelBuilder } from '../models/model'
  */
 
 export default abstract class Service<T> {
-  private table: Table
+  protected table: Table
 
   constructor (connection: Function, private classToCreate: ModelBuilder<T>) {
     this.table = connection(classToCreate.tableName)
@@ -25,13 +25,15 @@ export default abstract class Service<T> {
    */
   getAllRecord = (): Promise<T[]> =>
     this.table.select().all()
-      .then((resp: Record[]) => resp.map((record: Record, index: Number) =>
-        this.classToCreate.mapFromFieldToInstance({
-          id: record.getId(),
-          createAt: record.get('createdTime'),
-          ...record.fields
-        }
-        )))
+      .then(this.mapResponse);
+
+  protected mapResponse = (resp: Record[]) => resp.map((record: Record, index: Number) =>
+    this.classToCreate.mapFromFieldToInstance({
+      id: record.getId(),
+      createAt: record.get('createdTime'),
+      ...record.fields
+    }
+    ))
 }
 
 export const getConnection = () => new Airtable({ apiKey: process.env.AIRTABLE_APIKEY })
