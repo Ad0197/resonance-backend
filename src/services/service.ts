@@ -27,6 +27,17 @@ export default abstract class Service<T> {
     this.table.select().all()
       .then(this.mapResponse);
 
+  /**
+   * @function findById
+   * @param id String
+   *
+   * Get a Record from RecordId
+   *
+   * @returns T
+   */
+  findById = (id: string) => this.table.find(id).then((record: Record) => this.classToCreate
+    .mapFromFieldToInstance({ id: record.getId, createAt: record.get('createdTime'), ...record.fields }));
+
   protected mapResponse = (resp: Record[]) => resp.map((record: Record, index: Number) =>
     this.classToCreate.mapFromFieldToInstance({
       id: record.getId(),

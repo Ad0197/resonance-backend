@@ -11,8 +11,13 @@ export default class FurnitureResolver {
     return await this.service.getAllRecord()
   }
 
-  @Query(() => [Furniture])
+  @Query(returns => [Furniture])
   async findFurnitureByName (@Arg('name') name: String) {
     return await this.service.findByName(name)
+  }
+
+  @Query(returns => Furniture)
+  async findFurnitureById (@Arg('id') id: string) {
+    return await this.service.findById(id)
   }
 }
