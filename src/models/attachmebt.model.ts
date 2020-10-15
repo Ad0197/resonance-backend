@@ -34,7 +34,7 @@ export default class Attachment implements Airtable.Attachment {
     @Field()
     id: string;
 
-    @Field()
+    @Field({ nullable: true })
     url: string;
 
     @Field()

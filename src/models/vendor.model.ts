@@ -4,7 +4,8 @@ import { Model } from './model'
 
 @ObjectType()
 export class Vendor implements Model {
-  static talbeName: String = 'Vendors';
+  static tableName: String = 'Vendors';
+
   @Field(type => [String])
   furniture: string[];
 
@@ -14,14 +15,14 @@ export class Vendor implements Model {
   @Field({ nullable: true })
   shippingDetails?: Attachment;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
   @Field(type => [String])
   salesContact: string[];
 
-  @Field()
-  logo: Attachment;
+  @Field(() => [Attachment], { nullable: true })
+  logo: Attachment[];
 
   @Field()
   notes: string;
@@ -32,7 +33,7 @@ export class Vendor implements Model {
   @Field({ nullable: true })
   closestShowroomAddress?: string;
 
-  static mapFromRecordToVendor = (record: any): Vendor => ({
+  static mapFromFieldToInstance = (record: any): Vendor => ({
     furniture: record.Furniture,
     catalogLink: record['Catalog Link'],
     name: record.Name,

@@ -1,4 +1,6 @@
 import { Field, ObjectType } from 'type-graphql'
+import { getConnection } from '../services/service'
+import VendorService from '../services/vendor.services'
 import Attachment from './attachmebt.model'
 import { Model } from './model'
 import { Vendor } from './vendor.model'
@@ -27,8 +29,8 @@ export default class Furniture implements Model {
   @Field(type => [String])
   settings: string[];
 
-  @Field(type => [Vendor])
-  vendor: Vendor[];
+  @Field(type => Vendor, { nullable: false })
+  vendor: Vendor;
 
   @Field({ nullable: true })
   notes?: string;
@@ -66,7 +68,8 @@ export default class Furniture implements Model {
   @Field(type => [Attachment], { nullable: true })
   schematic?: Attachment[];
 
-  static mapFromFieldToInstance = (record: any): Furniture => {
+  static mapFromFieldToInstance = async (record: any): Promise<Furniture> => {
+    const vendorService = new VendorService(getConnection())
     return {
       id: record.id,
       designer: record.Designer,
@@ -75,7 +78,7 @@ export default class Furniture implements Model {
       size: record['Size (WxLxH)'],
       unitCost: record['Unit Cost'],
       settings: record.Settings,
-      vendor: record.Vendor,
+      vendor: await vendorService.findById(record.Vendor),
       notes: record.Notes,
       link: record?.Link,
       name: record.Name,
@@ -91,25 +94,27 @@ export default class Furniture implements Model {
     }
   }
 
-  static mapFromInstanceToField = (object: Furniture): any => ({
-    Designer: object?.designer,
-    'Units In Store': object.unitsInStore,
-    'Materials and Finishes': object.materialsAndFinishes,
-    'Size (WxLxH)': object.size,
-    'Unit Cost': object.unitCost,
-    Settings: object.settings,
-    Vendor: object.vendor,
-    Notes: object?.notes,
-    Link: object.link,
-    Name: object.name,
-    Type: object.type,
-    Picture: object.picture,
-    Description: object.description,
-    'Total Units Sold': object.totalUnitsSold,
-    'Gross Sales': object.grossSales,
-    RecordID: object.recordID,
-    'In Stock': object?.inStock,
-    Orders: object?.orders,
-    Schematic: object?.schematic
-  })
+  static mapFromInstanceToField = (object: Furniture): any => {
+    return {
+      Designer: object?.designer,
+      'Units In Store': object.unitsInStore,
+      'Materials and Finishes': object.materialsAndFinishes,
+      'Size (WxLxH)': object.size,
+      'Unit Cost': object.unitCost,
+      Settings: object.settings,
+      Vendor: object.vendor,
+      Notes: object?.notes,
+      Link: object.link,
+      Name: object.name,
+      Type: object.type,
+      Picture: object.picture,
+      Description: object.description,
+      'Total Units Sold': object.totalUnitsSold,
+      'Gross Sales': object.grossSales,
+      RecordID: object.recordID,
+      'In Stock': object?.inStock,
+      Orders: object?.orders,
+      Schematic: object?.schematic
+    }
+  }
 }
