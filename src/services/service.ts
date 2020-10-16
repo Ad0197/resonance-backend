@@ -36,15 +36,38 @@ export default abstract class Service<T> {
    * @returns T
    */
   findById = (id: string) => this.table.find(id).then((record: Record) => this.classToCreate
-    .mapFromFieldToInstance({ id: record.getId, createAt: record.get('createdTime'), ...record.fields }));
+    .mapFromFieldToInstance({ id: record.getId(), createAt: record.get('createdTime'), ...record.fields }));
 
-  protected mapResponse = (resp: Record[]) => resp.map((record: Record, index: Number) =>
-    this.classToCreate.mapFromFieldToInstance({
+  /**
+   * @function create
+   * @param newRecord
+   *
+   * Create a new record.
+   */
+
+  create = (newRecord: T) => {
+    if (this.classToCreate?.mapFromInstanceToField !== undefined) {
+      const mappedField = this.classToCreate.mapFromInstanceToField(newRecord)
+      console.log(mappedField)
+      return this.table.create(mappedField)
+    }
+    throw Error('Must set a MapFromInstancaToField fn')
+  }
+
+  /**
+   * @function mapResponse
+   * @protected
+   *
+   * Map Fields of Record to Model object.
+   */
+
+  protected mapResponse = (resp: Record[]) => resp.map((record: Record, index: Number) => {
+    return this.classToCreate.mapFromFieldToInstance({
       id: record.getId(),
       createAt: record.get('createdTime'),
       ...record.fields
-    }
-    ))
+    })
+  })
 }
 
 export const getConnection = () => new Airtable({ apiKey: process.env.AIRTABLE_APIKEY })

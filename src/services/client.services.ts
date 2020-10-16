@@ -1,10 +1,8 @@
-// import { Client, mapFromRecordToClient } from '../models/client.model'
-// import Service from './airtable'
+import Client from '../models/client.model'
+import Service from './service'
 
-// export default class ClientService extends Service {
-//   constructor () {
-//     super('Clients')
-//   }
-
-//     getAllClient = async (): Promise<Client[]> => (await this.getAllRecord()).map(mapFromRecordToClient)
-// }
+export default class ClientService extends Service<Client> {
+  constructor (connection: Function) {
+    super(connection, Client)
+  }
+}

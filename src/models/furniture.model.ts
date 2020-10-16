@@ -1,7 +1,7 @@
 import { Field, ObjectType } from 'type-graphql'
 import { getConnection } from '../services/service'
 import VendorService from '../services/vendor.services'
-import Attachment from './attachmebt.model'
+import Attachment from './attachment.model'
 import { Model } from './model'
 import { Vendor } from './vendor.model'
 
@@ -69,7 +69,8 @@ export default class Furniture implements Model {
   schematic?: Attachment[];
 
   static mapFromFieldToInstance = async (record: any): Promise<Furniture> => {
-    const vendorService = new VendorService(getConnection())
+    const connection = getConnection()
+    const vendorService = new VendorService(connection)
     return {
       id: record.id,
       designer: record.Designer,
