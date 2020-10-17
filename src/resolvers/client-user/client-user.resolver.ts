@@ -5,14 +5,14 @@ import ClientService from '../../services/client.services'
 import { getConnection } from '../../services/service'
 import UserService from '../../services/user.services'
 import Bcrypt from 'bcrypt'
-import { LoginResponse } from './client-user.types'
+import { isStoredType, LoginResponse } from './client-user.types'
 import { createAccessToken, createRefreshToken, MyContext } from '../../auth/auth'
 import { sendRefereshToken } from '../../auth/routeAuth'
 
 @Resolver()
 export default class ClientUserResolver {
-  @Mutation(() => User)
-  async createClientUser (@Arg('user') user: User): Promise<User | undefined> {
+  @Mutation(() => LoginResponse)
+  async createClientUser (@Arg('user') user: User, @Ctx() ctx: MyContext): Promise<LoginResponse> {
     try {
       const connection = getConnection()
       user.password = await Bcrypt.hash(user.password, parseInt(process.env.SALT || '10'))
@@ -20,13 +20,19 @@ export default class ClientUserResolver {
       const clientService = new ClientService(connection)
       const createdUser = await userService.create(user)
       const client = new Client()
-      client.users = createdUser.getId()
+      client.users = createdUser.id
       client.name = `${user.firstName} ${user.lastName}`
       await clientService.create(client)
-      return user
+      sendRefereshToken(ctx.res, createdUser.id)
+      const resp = {
+        accessToken: createAccessToken(createdUser),
+        user: createdUser
+      }
+      console.log(resp)
+      return resp
     } catch (error) {
       console.log(error)
-      return undefined
+      return {} as LoginResponse
     }
   }
 
@@ -48,5 +54,22 @@ export default class ClientUserResolver {
   logout (@Ctx() ctx: MyContext): boolean {
     sendRefereshToken(ctx.res, '')
     return true
+  }
+
+  @Query(() => isStoredType)
+  async isStored (@Arg('username') username: string, @Arg('email') email: string): Promise<isStoredType> {
+    let isEmail: boolean = false
+    let isUsername: boolean = false
+    try {
+      const userService = new UserService(getConnection())
+      const user = await userService.findByUsername(username)
+      const userEmail = await userService.findByEmail(email)
+      if (user?.username === username) isUsername = true
+      if (userEmail?.email === email) isEmail = true
+      return { email: isEmail, username: isUsername }
+    } catch (error) {
+      console.log(error)
+      return { email: isEmail, username: isUsername }
+    }
   }
 }

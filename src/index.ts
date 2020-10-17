@@ -9,6 +9,7 @@ import ClientUserResolver from './resolvers/client-user/client-user.resolver'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import AuthRoute from './auth/routeAuth'
+import MailerSendGridResolver from './resolvers/mailer_sendgrid/mailer_sendgrid.resolver'
 
 (
   async () => {
@@ -21,7 +22,7 @@ import AuthRoute from './auth/routeAuth'
     app.use('/', AuthRoute)
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [HelloResolver, FurnitureResolver, ClientUserResolver]
+        resolvers: [HelloResolver, FurnitureResolver, ClientUserResolver, MailerSendGridResolver]
       }),
       context: ({ req, res }) => ({ req, res })
     })

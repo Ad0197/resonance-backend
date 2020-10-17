@@ -9,3 +9,12 @@ export class LoginResponse {
     @Field(type => User)
     user: User;
 }
+
+@ObjectType()
+export class isStoredType {
+    @Field()
+    email: boolean;
+
+    @Field()
+    username: boolean;
+}
