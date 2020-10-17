@@ -11,8 +11,8 @@ import { sendRefereshToken } from '../../auth/routeAuth'
 
 @Resolver()
 export default class ClientUserResolver {
-  @Mutation(() => Boolean)
-  async createClientUser (@Arg('user') user: User) {
+  @Mutation(() => User)
+  async createClientUser (@Arg('user') user: User): Promise<User | undefined> {
     try {
       const connection = getConnection()
       user.password = await Bcrypt.hash(user.password, parseInt(process.env.SALT || '10'))
@@ -23,10 +23,10 @@ export default class ClientUserResolver {
       client.users = createdUser.getId()
       client.name = `${user.firstName} ${user.lastName}`
       await clientService.create(client)
-      return true
+      return user
     } catch (error) {
       console.log(error)
-      return false
+      return undefined
     }
   }
 
@@ -34,7 +34,8 @@ export default class ClientUserResolver {
   async login (@Arg('email') email: string, @Arg('password') password: string, @Ctx() ctx: MyContext): Promise<LoginResponse> {
     const userService = new UserService(getConnection())
     const user = await userService.findByEmail(email)
-    if (!user) throw new Error('Bad email')
+    if (!user) throw new Error('Bad login')
+    if (!(await Bcrypt.compare(password, user.password))) throw new Error('Bad login')
     const accessToken = createAccessToken(user)
     sendRefereshToken(ctx.res, createRefreshToken(user))
     return {
