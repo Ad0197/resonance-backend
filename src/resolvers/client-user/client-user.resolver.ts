@@ -43,4 +43,10 @@ export default class ClientUserResolver {
       accessToken
     }
   }
+
+  @Query(() => Boolean)
+  logout (@Ctx() ctx: MyContext): boolean {
+    sendRefereshToken(ctx.res, '')
+    return true
+  }
 }

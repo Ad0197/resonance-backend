@@ -1,8 +1,9 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, InputType, ObjectType } from 'type-graphql'
 import Attachment from './attachment.model'
 import { Model } from './model'
 
-@ObjectType()
+@ObjectType('Client')
+@InputType('ClientInput')
 export default class Client implements Model {
   static tableName: string = 'Clients';
   @Field({ nullable: true })
