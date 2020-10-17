@@ -1,8 +1,8 @@
 import { Field, InputType, ObjectType } from 'type-graphql'
 import { Model } from './model'
 
-@InputType()
-@ObjectType()
+@InputType('UserInput')
+@ObjectType('User')
 export default class User implements Model {
   static tableName: string = 'Users';
   @Field()
