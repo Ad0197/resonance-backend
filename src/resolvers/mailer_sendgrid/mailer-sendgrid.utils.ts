@@ -11,8 +11,10 @@ export const genEmail = (email: string, furniture: Furniture): any => (
             <div styles="display: flex;">
                 by <b>${furniture.vendor.name}</b>
             </div>
-            <h3>description</h3>
+            <h3>Description</h3>
             <p> ${furniture.description} </p>
+            <h3> Images </h3>
+            ${furniture.picture.map((img) => `<img src="${img.url}" alt="${furniture.name}"/>`).toString().replace('[', '').replace(']', '').replace(',', '')}
         </div>
       `
   })

@@ -28,11 +28,10 @@ export default class ClientUserResolver {
         accessToken: createAccessToken(createdUser),
         user: createdUser
       }
-      console.log(resp)
       return resp
     } catch (error) {
       console.log(error)
-      return {} as LoginResponse
+      return { accessToken: '', user: {} as User }
     }
   }
 
